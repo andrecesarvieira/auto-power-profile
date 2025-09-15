@@ -5,7 +5,7 @@
   "name": "Auto Power Profile",
   "settings-schema": "org.gnome.shell.extensions.auto-power-profile",
   "shell-version": ["45", "46", "47", "48"],
-  "url": "https://github.com/dmy3k/auto-power-profile",
-  "uuid": "auto-power-profile@dmy3k.github.io",
+  "url": "https://github.com/andrecesarvieira/auto-power-profile",
+  "uuid": "auto-power-profile@andrecesarvieira.github.io",
   "version": 21
 }
