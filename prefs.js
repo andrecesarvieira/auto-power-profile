@@ -11,6 +11,7 @@ import {
 
 import { createPowerProfilesProxy } from "./lib/utils.js";
 
+// Função utilitária para carregar XML de interfaces D-Bus do GNOME
 // https://github.com/GNOME/gnome-shell/blob/3c1f6113fafda391e360114987298a14c6d72f66/js/misc/dbusUtils.js#L26
 function loadInterfaceXML(iface) {
   let uri = `resource:///org/gnome/shell/dbus-interfaces/${iface}.xml`;
@@ -26,6 +27,7 @@ function loadInterfaceXML(iface) {
   return null;
 }
 
+// Função para vincular ComboBox do Adwaita às configurações GNOME
 function bindAdwComboRow(comboRow, settings, key, map_) {
   const initValue = settings.get_string(key);
   comboRow.selected = map_.indexOf(initValue);
@@ -40,6 +42,7 @@ function bindAdwComboRow(comboRow, settings, key, map_) {
   });
 }
 
+// Página de preferências "Geral" da extensão
 export const General = GObject.registerClass(
   {
     GTypeName: "AutoPowerProfileGeneralPrefs",
@@ -58,6 +61,7 @@ export const General = GObject.registerClass(
     ],
   },
   class General extends Adw.PreferencesPage {
+    // Inicializa a página de preferências geral
     _init(settings, availableProfilesPromise, params = {}) {
       super._init({
         ...params,
@@ -66,6 +70,7 @@ export const General = GObject.registerClass(
         icon_name: "power-profile-performance-symbolic",
       });
 
+      // Carrega perfis disponíveis e vincula aos controles
       availableProfilesPromise
         .then((availableProfiles) => {
           const indexedProfiles = availableProfiles.map(([k, name]) => k);
@@ -77,6 +82,7 @@ export const General = GObject.registerClass(
           bindAdwComboRow(this._ac_profile, settings, "ac", indexedProfiles);
           bindAdwComboRow(this._bat_profile, settings, "bat", indexedProfiles);
 
+          // Liga controles de limite e lapmode às configurações
           settings.bind(
             "threshold",
             this._threshold,
@@ -90,6 +96,7 @@ export const General = GObject.registerClass(
             Gio.SettingsBindFlags.DEFAULT
           );
 
+          // Exibe opção de lapmode apenas se perfil AC for "performance"
           const onSettingsUpdate = () => {
             const acDefault = settings.get_string("ac");
             this._row_lap_mode.visible = acDefault === "performance";
@@ -102,9 +109,11 @@ export const General = GObject.registerClass(
   }
 );
 
+// Página de preferências "Aplicativos de Desempenho"
 export const PerformanceApps = GObject.registerClass(
   { GTypeName: "AutoPowerProfilePerformanceAppsPrefs" },
   class PerformanceApps extends Adw.PreferencesPage {
+    // Inicializa a página de apps de desempenho
     _init(settings, availableProfilesPromise, params = {}) {
       super._init({
         ...params,
@@ -113,6 +122,7 @@ export const PerformanceApps = GObject.registerClass(
         icon_name: "application-x-executable-symbolic",
       });
 
+      // Grupo para seleção de perfis por modo
       const modesGroup = new Adw.PreferencesGroup({
         title: _("Application-Based Profiles"),
         description: _(
@@ -121,6 +131,7 @@ export const PerformanceApps = GObject.registerClass(
       });
       this.add(modesGroup);
 
+      // Carrega perfis disponíveis e vincula combos
       availableProfilesPromise.then((allProfiles) => {
         const availableProfiles = allProfiles.filter(
           ([k, _]) => k !== "power-saver"
@@ -137,6 +148,7 @@ export const PerformanceApps = GObject.registerClass(
         const currentAcProfile =
           settings.get_string(performanceAppsAcKey) || defaultProfile;
 
+        // Combo para perfil na bateria
         const batCombo = new Adw.ComboRow({
           title: _("On Battery"),
           model: Gtk.StringList.new(availableProfiles.map(([_, n]) => n)),
@@ -145,6 +157,7 @@ export const PerformanceApps = GObject.registerClass(
         bindAdwComboRow(batCombo, settings, performanceAppsBatKey, profileKeys);
         modesGroup.add(batCombo);
 
+        // Combo para perfil na energia
         const acCombo = new Adw.ComboRow({
           title: _("On AC"),
           model: Gtk.StringList.new(availableProfiles.map(([_, n]) => n)),
@@ -153,9 +166,11 @@ export const PerformanceApps = GObject.registerClass(
         bindAdwComboRow(acCombo, settings, performanceAppsAcKey, profileKeys);
         modesGroup.add(acCombo);
 
+        // Grupo para seleção de aplicativos
         const group = new Adw.PreferencesGroup({});
         this.add(group);
 
+        // Lista todos os aplicativos disponíveis
         const apps = Gio.AppInfo.get_all().filter((app) => {
           try {
             return app.should_show() && app.get_id();
@@ -170,6 +185,7 @@ export const PerformanceApps = GObject.registerClass(
         const selectedIds = new Set(settings.get_strv("performance-apps"));
         this._switchRows = {};
 
+        // Cria switch para cada aplicativo
         apps.forEach((app) => {
           const appId = app.get_id();
           const appName = app.get_display_name();
@@ -189,6 +205,7 @@ export const PerformanceApps = GObject.registerClass(
             row.add_prefix(image);
           }
 
+          // Atualiza lista de apps selecionados
           row.connect("notify::active", (sw) => {
             let current = new Set(settings.get_strv("performance-apps"));
             if (sw.active) {
@@ -202,6 +219,7 @@ export const PerformanceApps = GObject.registerClass(
           group.add(row);
         });
 
+        // Observa mudanças na lista de apps selecionados
         this._settingsChangedId = settings.connect(
           "changed::performance-apps",
           () => {
@@ -214,6 +232,7 @@ export const PerformanceApps = GObject.registerClass(
       });
     }
 
+    // Libera recursos ao fechar preferências
     vfunc_dispose() {
       if (this._settingsChangedId) {
         this._settings.disconnect(this._settingsChangedId);
@@ -224,7 +243,9 @@ export const PerformanceApps = GObject.registerClass(
   }
 );
 
+// Classe principal das preferências da extensão
 export default class AutoPowerProfilePreferences extends ExtensionPreferences {
+  // Preenche a janela de preferências com as páginas
   fillPreferencesWindow(window) {
     const settings = this.getSettings();
     const availableProfiles = this._loadAvailableProfiles();
@@ -233,6 +254,7 @@ export default class AutoPowerProfilePreferences extends ExtensionPreferences {
     window.add(new PerformanceApps(settings, availableProfiles));
   }
 
+  // Carrega perfis de energia disponíveis do sistema
   _loadAvailableProfiles = () => {
     const PROFILES_I18N = [
       ["performance", _("Performance")],
