@@ -53,7 +53,7 @@ msgid ""
 "Activate profiles for running selected apps. Can be used to prioritize "
 "performance ad-hoc"
 msgstr ""
-"Selecione os aplicativos que executarão com os perfis acima."
+"Selecione os aplicativos que executarão com os perfis:"
 
 #: prefs.js:141 ui/general.ui:36
 msgid "On Battery"
@@ -77,12 +77,12 @@ msgstr "Economia de Energia"
 
 #: ui/general.ui:9
 msgid "Default Profiles"
-msgstr "Perfis padrão"
+msgstr "Perfis de Energia"
 
 #: ui/general.ui:10
 msgid "Applied automatically unless user sets manually another one"
 msgstr ""
-"Aplicado automáticamente exceto se for configurado manualmente outro perfil"
+"Aplicado automaticamente, exceto se o usuário escolher outro perfil manualmente"
 
 #: ui/general.ui:15
 msgid "Select the default profile when connected to AC"
@@ -109,7 +109,7 @@ msgstr "Limite para economia de energia"
 
 #: ui/general.ui:49
 msgid "Switch to power saving profile when the battery level drops below"
-msgstr "Trocar para o perfil de economia de energia quando o nível da bateria ficar abaixo de"
+msgstr "Trocar para o perfil de economia de energia quando o nível da bateria ficar abaixo de:"
 
 #~ msgid "Advanced"
 #~ msgstr "Avançado"
