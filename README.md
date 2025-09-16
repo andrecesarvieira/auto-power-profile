@@ -1,68 +1,77 @@
 # Auto Power Profile
 
-[![Tests](https://github.com/dmy3k/auto-power-profile/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/dmy3k/auto-power-profile/actions/workflows/tests.yml)
+Extensão para GNOME Shell que alterna automaticamente entre perfis de energia conforme o status da fonte de alimentação e nível da bateria.
 
-GNOME Shell extension to automatically switch between power profiles based on power supply status and battery level.
+Este projeto é um fork mantido por [andrecesarvieira](https://github.com/andrecesarvieira), baseado no trabalho original de [dmy3k](https://github.com/dmy3k/auto-power-profile).
 
-The extension offers alternative solution to long-standing
-[feature request #715](https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/issues/715) in `gnome-settings-daemon` repo.
+## Compatibilidade
 
-## Settings
+- GNOME Shell: 45, 46, 47, 48
+- Linux: Requer suporte ao `powerprofilesctl` ou `tuned-ppd` (Fedora >= 40)
 
-![Settings window](.github/img/settings.png)
+## Instalação
 
-## Installation
+### Dependências
 
-### Dependencies
+- [`powerprofilesctl`](https://gitlab.freedesktop.org/upower/power-profiles-daemon) (presente na maioria das distros GNOME)
+- Ou `tuned-ppd` (Fedora >= 40)
 
-This extension requires [`powerprofilesctl`](https://gitlab.freedesktop.org/upower/power-profiles-daemon) (used in most distros with Gnome desktop) or `tuned-ppd` (Fedora >= 40) package to operate.
+### Loja de Extensões GNOME
 
-### From Gnome Extensions store
+Disponível na [GNOME Extensions](https://extensions.gnome.org/extension/6583/auto-power-profile/).
 
-This extension can be found in the [store](https://extensions.gnome.org/extension/6583/auto-power-profile/).
+### Instalação manual (desenvolvimento)
 
-[<img src=".github/img/store.png" height="100" alt="Get it on GNOME Extensions">](https://extensions.gnome.org/extension/6583/auto-power-profile/)
-
-### From source
-
-Typically this is needed for testing and development. Clone the repo, pack and install the extension.
-
-```
-# Clone repository
-git clone https://github.com/dmy3k/auto-power-profile
+```bash
+# Clone o repositório do fork
+git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Build
+# Compile schemas
 glib-compile-schemas schemas/
+
+# Empacote a extensão
 gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib
 
-# Install and activate
-gnome-extensions install --force auto-power-profile@dmy3k.github.io.shell-extension.zip
-gnome-extensions enable auto-power-profile@dmy3k.github.io
+# Instale e ative
+gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
+gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 ```
 
-Extension will appear in the list of extensions and will be activated after you logout and log back in.
+A extensão aparecerá na lista e será ativada após reiniciar a sessão.
 
-### Translations
+## Configuração
 
-- re-generate `pot` file if you add new strings during development
+O painel de configurações permite:
 
-```
-xgettext \
-    --from-code=UTF-8 \
-    --package-name="Auto Power Profile" \
-    --output="po/auto-power-profile.pot" \
-    *.js \
-    ui/*.ui
-```
+- Definir perfis padrão para energia e bateria
+- Ajustar limite para economia de energia
+- Ativar/desativar modo "colo" (lap-mode)
+- Selecionar aplicativos que ativam perfil de desempenho
 
-- create (e.g `cp po/auto-power-profile.pot po/es.po`) or edit corresponding `po` files, e.g with [Poedit](https://poedit.net/)
-- create pull request
+![Janela de configurações](.github/img/settings.png)
 
-## Contribution
+## Tradução
 
-Contribution to this project are welcome
+O projeto suporta múltiplos idiomas. Para contribuir com traduções:
 
-## Credits
+1. Gere o arquivo `.pot` após adicionar novas strings:
+   ```bash
+   xgettext \
+     --from-code=UTF-8 \
+     --package-name="Auto Power Profile" \
+     --output="po/auto-power-profile.pot" \
+     *.js \
+     ui/*.ui
+   ```
+2. Crie ou edite arquivos `.po` (exemplo: `cp po/auto-power-profile.pot po/pt_BR.po`).
+3. Edite com [Poedit](https://poedit.net/) ou similar.
+4. Envie um Pull Request.
 
-To the authors of [eliapasquali/power-profile-switcher](https://github.com/eliapasquali/power-profile-switcher), as current project was forked from it.
+## Contribuição
+
+Contribuições são bem-vindas! Abra issues ou envie PRs.
+
+## Créditos
+
+Baseado no trabalho de [eliapasquali/power-profile-switcher](https://github.com/eliapasquali/power-profile-switcher).
