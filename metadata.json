@@ -1,10 +1,10 @@
 {
-  "description": "Extensão GNOME Shell para alternância automática de perfis de energia conforme fonte e bateria. Inclui controle automático de animações para economia de energia. Fork mantido por andrecesarvieira.",
+  "description": "Extensão GNOME Shell para alternância automática de perfis de energia conforme fonte e bateria. Nova funcionalidade: controle automático de animações para economia de energia na bateria. Fork mantido por andrecesarvieira.",
   "gettext-domain": "org.gnome.shell.extensions.auto-power-profile",
   "name": "Auto Power Profile",
   "settings-schema": "org.gnome.shell.extensions.auto-power-profile",
-  "shell-version": ["45", "46", "47", "48"],
+  "shell-version": ["45", "46", "47", "48", "49"],
   "url": "https://github.com/andrecesarvieira/auto-power-profile",
   "uuid": "auto-power-profile@andrecesarvieira.github.io",
-  "version": 23
+  "version": 24
 }
