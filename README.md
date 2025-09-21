@@ -25,8 +25,6 @@ chmod +x install.sh
 
 **Dependência**: `sudo apt install power-profiles-daemon` (Ubuntu/Debian) ou `sudo dnf install power-profiles-daemon` (Fedora)
 
-> 💡 **Não funcionou?** Consulte o [Guia de Troubleshooting](./TROUBLESHOOTING.md)
-
 ## ⚡ Funcionalidades
 
 - **🔄 Alternância automática**: Perfis personalizáveis para energia e bateria
@@ -48,7 +46,6 @@ Suporte a **6 idiomas**: 🇧🇷 Português | 🇺🇸 English | 🇪🇸 Espa�
 
 ## 🔧 Resolução de Problemas
 
-- **Instalação falha**: Consulte o [Guia de Troubleshooting](./TROUBLESHOOTING.md)
 - **Extensão não carrega**: Instale `power-profiles-daemon` e reinicie a sessão
 - **Perfis não alternam**: Verifique com `powerprofilesctl list`
 - **Animações não desabilitam**: Ative a opção nas configurações da extensão
