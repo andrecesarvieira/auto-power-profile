@@ -8,11 +8,24 @@ Extensão GNOME Shell para alternância automática de perfis de energia com con
 
 ## 🚀 Instalação
 
+### Instalação Automática (Recomendada)
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh | bash
 ```
 
+### Método Alternativo (se curl não funcionar)
+
+```bash
+# Baixar e executar localmente
+curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh -o install.sh
+chmod +x install.sh
+./install.sh
+```
+
 **Dependência**: `sudo apt install power-profiles-daemon` (Ubuntu/Debian) ou `sudo dnf install power-profiles-daemon` (Fedora)
+
+> 💡 **Não funcionou?** Consulte o [Guia de Troubleshooting](./TROUBLESHOOTING.md)
 
 ## ⚡ Funcionalidades
 
