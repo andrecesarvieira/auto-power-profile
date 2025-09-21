@@ -127,7 +127,9 @@ O painel de configurações oferece duas abas:
 - Definir perfis específicos para bateria e energia
 - Listagem automática de todos os aplicativos instalados
 
-![Janela de configurações](.github/img/settings.png)
+![Janela de configurações - Geral](.github/img/settings.png)
+
+![Aplicativos de Performance](.github/img/performance_apps.png)
 
 ## Tradução
 
