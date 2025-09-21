@@ -6,21 +6,21 @@
         <property name="icon-name">power-profile-balanced-rtl-symbolic</property>
         <child>
             <object class="AdwPreferencesGroup" id="ui_group">
-                <property name="title" translatable="yes">Default Profiles</property>
-                <property name="description" translatable="yes">Applied automatically unless user sets manually another one</property>
+                <property name="title" translatable="yes">Perfis de Energia</property>
+                <property name="description" translatable="yes">Aplicado automaticamente, exceto se o usuário escolher outro perfil manualmente</property>
 
                 <child>
                     <object class="AdwComboRow" id="ac_profile">
-                        <property name="title" translatable="yes">On AC</property>
-                        <property name="subtitle" translatable="yes">Select the default profile when connected to AC</property>
+                        <property name="title" translatable="yes">Energia</property>
+                        <property name="subtitle" translatable="yes">Selecione o perfil para quando conectado à energia</property>
                         <property name="model">platform_profile_model</property>
                     </object>
                 </child>
 
                 <child>
                     <object class="AdwActionRow" id="row_lap_mode">
-                        <property name="title" translatable="yes">Handle lap-mode on AC</property>
-                        <property name="subtitle" translatable="yes">Try to maintain performance mode on unstable surfaces. Disable if you are experiencing thermal issues</property>
+                        <property name="title" translatable="yes">Modo 'colo' quando conectado à energia</property>
+                        <property name="subtitle" translatable="yes">Tenta manter no perfil de desempenho em superfícies instáveis. Desabilite se houver super-aquecimento</property>
                         <property name="activatable-widget">lap_mode</property>
                         <property name="visible">False</property>
                         <child>
@@ -33,8 +33,8 @@
 
                 <child>
                     <object class="AdwComboRow" id="bat_profile">
-                        <property name="title" translatable="yes">On Battery</property>
-                        <property name="subtitle" translatable="yes">Select the default profile when running on battery</property>
+                        <property name="title" translatable="yes">Bateria</property>
+                        <property name="subtitle" translatable="yes">Selecione o perfil para quando estiver somente na bateria</property>
                         <property name="model">platform_profile_model</property>
                     </object>
                 </child>
@@ -45,8 +45,8 @@
             <object class="AdwPreferencesGroup">
                 <child>
                     <object class="AdwSpinRow" id="threshold">
-                        <property name="title" translatable="yes">Power Saving Threshold</property>
-                        <property name="subtitle" translatable="yes">Switch to power saving profile when the battery level drops below</property>
+                        <property name="title" translatable="yes">Limite para economia de energia</property>
+                        <property name="subtitle" translatable="yes">Trocar para o perfil de economia de energia quando o nível da bateria ficar abaixo de</property>
                         <property name="adjustment">threshold_adjustment</property>
                         <property name="numeric">True</property>
                         <property name="snap-to-ticks">True</property>
@@ -58,12 +58,12 @@
 
         <child>
             <object class="AdwPreferencesGroup">
-                <property name="title" translatable="yes">Battery Optimizations</property>
-                <property name="description" translatable="yes">Additional power saving features when running on battery</property>
+                <property name="title" translatable="yes">Otimizações de Bateria</property>
+                <property name="description" translatable="yes">Recursos adicionais de economia de energia ao usar a bateria</property>
                 <child>
                     <object class="AdwSwitchRow" id="disable_animations_on_battery">
-                        <property name="title" translatable="yes">Disable animations on battery</property>
-                        <property name="subtitle" translatable="yes">Automatically disable GNOME animations when running on battery power to save energy. Animations are restored when connecting to AC power.</property>
+                        <property name="title" translatable="yes">Desabilitar animações na bateria</property>
+                        <property name="subtitle" translatable="yes">Desabilita automaticamente as animações do GNOME ao usar a bateria para economizar energia. As animações são restauradas ao conectar à energia.</property>
                     </object>
                 </child>
             </object>
