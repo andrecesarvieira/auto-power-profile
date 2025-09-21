@@ -419,11 +419,10 @@ main() {
     show_final_instructions
 }
 
-# Executar se chamado diretamente
-if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
-    case "${1:-}" in
-        --help|-h)
-            cat << 'EOF'
+# Executar se chamado diretamente ou via pipe
+case "${1:-}" in
+    --help|-h)
+        cat << 'EOF'
 Auto Power Profile - Instalador v2.0.0
 
 SINOPSE:
@@ -468,5 +467,4 @@ EOF
         *)
             main "$@"
             ;;
-    esac
-fi
+esac
