@@ -27,10 +27,6 @@ chmod +x install.sh
 ./install.sh
 ```
 
-### 📦 Loja de Extensões GNOME
-
-Disponível na [GNOME Extensions](https://extensions.gnome.org/extension/6583/auto-power-profile/) (pode estar desatualizada).
-
 ### ⚙️ Dependências
 
 - **Obrigatório**: [`power-profiles-daemon`](https://gitlab.freedesktop.org/upower/power-profiles-daemon)
