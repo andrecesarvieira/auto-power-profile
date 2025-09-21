@@ -392,9 +392,9 @@ interrupt_handler() {
     exit 1
 }
 
-# Configurar tratadores de erro
-trap 'error_handler $LINENO' ERR
-trap interrupt_handler SIGINT
+# Configurar tratadores de erro - REMOVIDO TEMPORARIAMENTE PARA DEBUG
+# trap 'error_handler $LINENO' ERR
+# trap interrupt_handler SIGINT
 
 # Função principal
 main() {
