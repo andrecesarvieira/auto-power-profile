@@ -17,22 +17,25 @@ Este projeto é um fork mantido por [andrecesarvieira](https://github.com/andrec
 
 ### 🚀 Instalação Rápida (Recomendada)
 
-**Baixar e instalar versão 2.0.0:**
+**Instalação automática com um comando:**
 ```bash
-# Baixar a versão mais recente
-wget https://github.com/andrecesarvieira/auto-power-profile/releases/download/v2.0.0/auto-power-profile-v2.0.0.zip
-
-# Instalar
-gnome-extensions install --force auto-power-profile-v2.0.0.zip
-gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
+curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh | bash
 ```
 
-**Ou instalar diretamente do repositório:**
+**Ou baixar e executar:**
 ```bash
-git clone https://github.com/andrecesarvieira/auto-power-profile.git
-cd auto-power-profile
-./build.sh
-gnome-extensions install --force auto-power-profile-v2.0.0.zip
+wget https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+**Instalação manual:**
+```bash
+# Baixar extensão
+wget https://github.com/andrecesarvieira/auto-power-profile/releases/download/v2.0.0/auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
+
+# Instalar
+gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
 gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 ```
 
@@ -52,18 +55,18 @@ gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 
 - **Alternativa**: `tuned-ppd` (Fedora >= 40)
 
-### 🛠️ Instalação Manual (Desenvolvimento)
+### 🛠️ Desenvolvimento e Build
 
 ```bash
 # Clone o repositório
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Build da extensão (compila traduções e schemas)
+# Build da extensão (compila traduções, schemas e empacota)
 ./build.sh
 
-# Instalar versão 2.0.0
-gnome-extensions install --force auto-power-profile-v2.0.0.zip
+# Instalar versão local
+gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
 gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 ```
 
@@ -76,7 +79,7 @@ gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 # Reinstalação rápida para desenvolvimento  
 ./dev-test.sh
 
-# Build manual com empacotamento
+# Build com empacotamento (gera arquivo com UUID)
 ./build.sh
 ```
 
@@ -199,7 +202,7 @@ O projeto suporta múltiplos idiomas. Idiomas atualmente disponíveis:
    ```bash
    # Use o script de build e instalação
    ./build.sh
-   gnome-extensions install --force auto-power-profile-v2.0.0.zip
+   gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
    
    # Ou use o script de desenvolvimento rápido
    ./dev-test.sh
@@ -247,7 +250,7 @@ Contribuições são bem-vindas!
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Build (compila traduções e schemas)
+# Build (compila traduções, schemas e empacota)
 ./build.sh
 
 # Para desenvolvimento ativo (veja DEVELOPMENT.md para workflow completo)
@@ -262,7 +265,8 @@ git checkout development
 
 ### **Scripts Disponíveis**
 
-- **`./build.sh`**: Compila traduções, schemas e gera pacote v2.0.0
+- **`./install.sh`**: Instalação automática para usuários finais
+- **`./build.sh`**: Compila traduções, schemas e gera pacote com UUID
 - **`./test-development.sh`**: Teste abrangente com logs, validações e reinstalação
 - **`./dev-test.sh`**: Reinstalação rápida para desenvolvimento iterativo
 - **Documentação completa**: Consulte `DEVELOPMENT.md` e `TESTING.md`

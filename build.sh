@@ -171,6 +171,50 @@ show_info() {
     echo "  Tamanho total: $(du -sh . 2>/dev/null | cut -f1)"
 }
 
+# Empacotar extensão
+package_extension() {
+    print_header "Empacotando extensão..."
+    
+    # Obter UUID do metadata.json
+    local uuid
+    if command -v jq &> /dev/null; then
+        uuid=$(jq -r '.uuid' metadata.json)
+    else
+        # Fallback sem jq
+        uuid=$(grep -o '"uuid"[[:space:]]*:[[:space:]]*"[^"]*"' metadata.json | cut -d'"' -f4)
+    fi
+    
+    if [ -z "$uuid" ]; then
+        print_error "Não foi possível extrair UUID do metadata.json"
+        exit 1
+    fi
+    
+    # Nome do arquivo com UUID
+    local zip_filename="${uuid}.shell-extension.zip"
+    
+    # Remover arquivo existente
+    rm -f "$zip_filename"
+    
+    # Empacotar com gnome-extensions pack
+    if gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale --force; then
+        # Renomear para nomenclatura com UUID se necessário
+        if [ -f "*.shell-extension.zip" ] && [ ! -f "$zip_filename" ]; then
+            mv *.shell-extension.zip "$zip_filename"
+        fi
+        
+        print_status "Extensão empacotada: $zip_filename ✓"
+        
+        # Mostrar informações do arquivo
+        if [ -f "$zip_filename" ]; then
+            local file_size=$(du -h "$zip_filename" | cut -f1)
+            print_status "Tamanho do pacote: $file_size"
+        fi
+    else
+        print_error "Falha ao empacotar extensão"
+        exit 1
+    fi
+}
+
 # Função principal
 main() {
     print_header "Auto Power Profile - Build Script"
@@ -198,12 +242,15 @@ main() {
     validate_extension
     echo
     
+    package_extension
+    echo
+    
     show_info
     echo
     
     print_status "Build concluído com sucesso! 🎉"
-    print_status "Para instalar: gnome-extensions install --force [arquivo.zip]"
-    print_status "Para empacotar: gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale"
+    print_status "Arquivo gerado: auto-power-profile@andrecesarvieira.github.io.shell-extension.zip"
+    print_status "Para instalar: gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip"
 }
 
 # Executar se chamado diretamente

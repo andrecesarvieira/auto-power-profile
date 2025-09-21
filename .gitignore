@@ -146,7 +146,6 @@ extension-error.log
 # Files from upstream contribution/collaboration (if any)
 CONTRIBUTION.md
 PULL_REQUEST_GUIDE.md
-install.sh
 
 # ========================================
 # Git and Version Control
