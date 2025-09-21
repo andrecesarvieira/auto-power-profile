@@ -1,6 +1,8 @@
 # Auto Power Profile
 
-Extensão para GNOME Shell que alterna automaticamente entre perfis de energia conforme o status da fonte de alimentação e nível da bateria. Inclui otimizações adicionais como desabilitação automática de animações na bateria para maximizar a economia de energia.
+Extensão para GNOME Shell que alterna automaticamente entre perfis de energia conforme o status da fonte de alimentação e nível da bateria. **Nova funcionalidade**: controle automático de animações do GNOME para maximizar a economia de energia na bateria.
+
+> 🔋 **Economia de energia inteligente**: Desabilita animações automaticamente na bateria e restaura quando conectado à energia
 
 Este projeto é um fork mantido por [andrecesarvieira](https://github.com/andrecesarvieira), baseado no trabalho original de [dmy3k](https://github.com/dmy3k/auto-power-profile).
 
@@ -11,29 +13,54 @@ Este projeto é um fork mantido por [andrecesarvieira](https://github.com/andrec
 
 ## Instalação
 
-### Dependências
-
-- [`powerprofilesctl`](https://gitlab.freedesktop.org/upower/power-profiles-daemon) (presente na maioria das distros GNOME)
-- Ou `tuned-ppd` (Fedora >= 40)
-
-### Loja de Extensões GNOME
-
-Disponível na [GNOME Extensions](https://extensions.gnome.org/extension/6583/auto-power-profile/).
-
-### Instalação manual (desenvolvimento)
+### 🚀 Instalação Rápida (Recomendada)
 
 ```bash
-# Clone o repositório do fork
+# Instalação direta do GitHub (mais atualizada)
+curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh | bash
+```
+
+**Ou baixar e executar:**
+```bash
+wget https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+### 📦 Loja de Extensões GNOME
+
+Disponível na [GNOME Extensions](https://extensions.gnome.org/extension/6583/auto-power-profile/) (pode estar desatualizada).
+
+### ⚙️ Dependências
+
+- **Obrigatório**: [`power-profiles-daemon`](https://gitlab.freedesktop.org/upower/power-profiles-daemon)
+  ```bash
+  # Fedora/RHEL
+  sudo dnf install power-profiles-daemon
+  
+  # Ubuntu/Debian  
+  sudo apt install power-profiles-daemon
+  
+  # Arch Linux
+  sudo pacman -S power-profiles-daemon
+  ```
+
+- **Alternativa**: `tuned-ppd` (Fedora >= 40)
+
+### 🛠️ Instalação Manual (Desenvolvimento)
+
+```bash
+# Clone o repositório
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Build da extensão (compila schemas e traduções)
+# Build da extensão
 ./build.sh
 
-# Empacote a extensão
+# Empacote para distribuição
 gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale
 
-# Instale e ative
+# Instale
 gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
 gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 ```
@@ -179,13 +206,26 @@ Contribuições são bem-vindas!
 ### **Desenvolvimento**
 
 ```bash
+### **Desenvolvimento:**
+```bash
 # Clonar para desenvolvimento
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Instalar para teste
-ln -sf "$PWD" ~/.local/share/gnome-shell/extensions/auto-power-profile@andrecesarvieira.github.io
-gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
+# Build e instalação automática
+./build.sh
+```
+
+## 📋 Releases
+
+### Versão 23 (Atual)
+- ✨ **Nova**: Controle automático de animações na bateria
+- 🐛 **Corrigido**: Detecção de estados de energia melhorada
+- 🌍 **Melhorado**: Traduções completas para pt_BR
+- 🧹 **Limpeza**: Código otimizado e documentação melhorada
+
+### Versão 22
+- 📋 Fork inicial com funcionalidades básicas
 ```
 
 ## Licença

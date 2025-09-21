@@ -3,29 +3,28 @@
 *.mo
 gschemas.compiled
 
-# Diretório de traduções compiladas
+# Diretório de traduções compiladas (gerado pelo build)
 locale/
 
 # Dependências de desenvolvimento
 node_modules/
 
-# Arquivos de teste e desenvolvimento
+# Arquivos de desenvolvimento e debug
 test-*.sh
-status-check.sh
-check-translations.sh
+debug-*.sh
 install-dev.sh
+check-*.sh
+*-DEBUG.md
 
-# Arquivos de documentação temporária
-IMPLEMENTATION-*.md
-TRANSLATIONS-*.md
-
-# Configurações do VS Code (opcional, pode remover se quiser versionar)
+# Configurações do editor
 .vscode/
+.idea/
 
-# Arquivos de backup do editor
+# Arquivos de backup
 *~
 *.bak
 *.orig
+*.swp
 
 # Logs
 *.log

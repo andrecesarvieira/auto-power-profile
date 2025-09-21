@@ -302,10 +302,16 @@ export default class AutoPowerProfile extends Extension {
       this._powerManagerProxy?.Percentage === undefined
     );
 
-    // Verifica se está usando bateria
+    // Verifica se está usando bateria (não conectado à energia)
     const onBattery =
       this._powerManagerProxy?.State === UPower.DeviceState.PENDING_DISCHARGE ||
       this._powerManagerProxy?.State === UPower.DeviceState.DISCHARGING;
+
+    // Verifica se está conectado à energia (carregando ou totalmente carregado)
+    const onAC =
+      this._powerManagerProxy?.State === UPower.DeviceState.CHARGING ||
+      this._powerManagerProxy?.State === UPower.DeviceState.FULLY_CHARGED ||
+      this._powerManagerProxy?.State === UPower.DeviceState.PENDING_CHARGE;
 
     // Verifica se está com bateria baixa
     const lowBattery =
@@ -313,26 +319,26 @@ export default class AutoPowerProfile extends Extension {
       this._powerManagerProxy?.Percentage;
 
     // Define perfil conforme estado de energia
-    if (onBattery === false) {
+    if (onAC) {
       configuredProfile = this._settingsCache?.ACDefault;
-    } else if (onBattery === true && lowBattery) {
+    } else if (onBattery && lowBattery) {
       configuredProfile = "power-saver";
-    } else if (onBattery === true && !lowBattery) {
+    } else if (onBattery && !lowBattery) {
       configuredProfile = this._settingsCache?.batteryDefault;
     }
 
     // Se há apps de desempenho, ajusta perfil conforme modo
-    if (this._trackedWindows.size && onBattery === true) {
+    if (this._trackedWindows.size && onBattery) {
       configuredProfile = this._settingsCache.perfAppsBatMode;
-    } else if (this._trackedWindows.size && onBattery === false) {
+    } else if (this._trackedWindows.size && onAC) {
       configuredProfile = this._settingsCache.perfAppsAcMode;
     }
 
     return {
       hasBattery,
       onBattery,
-      onAC: onBattery === false,
-      lowBattery: onBattery === true && lowBattery,
+      onAC,
+      lowBattery: onBattery && lowBattery,
       perfApps: this._trackedWindows.size > 0,
       configuredProfile,
     };
@@ -375,13 +381,23 @@ export default class AutoPowerProfile extends Extension {
   _manageAnimationsBasedOnPower = () => {
     const powerConditions = this._getPowerConditions();
 
+    console.log(
+      `🔍 Auto Power Profile - Power state: onBattery=${powerConditions.onBattery}, onAC=${powerConditions.onAC}, disableAnimationsOnBattery=${this._settingsCache.disableAnimationsOnBattery}`
+    );
+
     // Se opção está ativada nas configurações
     if (this._settingsCache.disableAnimationsOnBattery) {
       if (powerConditions.onBattery) {
         // 🔋 Na bateria: DESABILITA animações
+        console.log(
+          "🔋 Auto Power Profile - Disabling animations (on battery)"
+        );
         this._disableAnimations();
       } else if (powerConditions.onAC) {
         // ⚡ Na energia: REABILITA animações
+        console.log(
+          "⚡ Auto Power Profile - Enabling animations (on AC power)"
+        );
         this._enableAnimations();
       }
     }
