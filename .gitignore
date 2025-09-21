@@ -26,13 +26,14 @@ output/
 # Development and Testing
 # ========================================
 
-# Development scripts
-test-*.sh
+# Development scripts (allow specific test scripts)
 debug-*.sh
 install-dev.sh
 check-*.sh
 validate-*.sh
 test-functionality.sh
+!test-development.sh
+!dev-test.sh
 
 # Debug and temporary documentation
 *-DEBUG.md
