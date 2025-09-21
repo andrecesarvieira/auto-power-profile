@@ -17,15 +17,23 @@ Este projeto é um fork mantido por [andrecesarvieira](https://github.com/andrec
 
 ### 🚀 Instalação Rápida (Recomendada)
 
+**Baixar e instalar versão 2.0.0:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh | bash
+# Baixar a versão mais recente
+wget https://github.com/andrecesarvieira/auto-power-profile/releases/download/v2.0.0/auto-power-profile-v2.0.0.zip
+
+# Instalar
+gnome-extensions install --force auto-power-profile-v2.0.0.zip
+gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 ```
 
-**Ou baixar e executar:**
+**Ou instalar diretamente do repositório:**
 ```bash
-wget https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh
-chmod +x install.sh
-./install.sh
+git clone https://github.com/andrecesarvieira/auto-power-profile.git
+cd auto-power-profile
+./build.sh
+gnome-extensions install --force auto-power-profile-v2.0.0.zip
+gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 ```
 
 ### ⚙️ Dependências
@@ -54,19 +62,22 @@ cd auto-power-profile
 # Build da extensão (compila traduções e schemas)
 ./build.sh
 
-# Empacote para distribuição
-gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale
-
-# Instale
-gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
+# Instalar versão 2.0.0
+gnome-extensions install --force auto-power-profile-v2.0.0.zip
 gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 ```
 
-**Desenvolvimento rápido:**
+**Scripts de Desenvolvimento:**
 
 ```bash
-# Para desenvolvimento com reinstalação automática
-./install-dev.sh
+# Teste completo com reinstalação automática
+./test-development.sh
+
+# Reinstalação rápida para desenvolvimento  
+./dev-test.sh
+
+# Build manual com empacotamento
+./build.sh
 ```
 
 A extensão aparecerá na lista e será ativada após reiniciar a sessão.
@@ -109,6 +120,15 @@ Quando habilitado nas configurações:
 - **Desabilitação automática de animações**: Quando na bateria, as animações do GNOME são automaticamente desabilitadas para economizar CPU/GPU
 - **Restauração automática**: Animações são restauradas ao conectar à energia
 - **Estado preservado**: Mantém as configurações originais do usuário
+
+### 🚀 **Recursos da Versão 2.0.0**
+
+- **Código Refatorado**: Arquitetura modular com separação clara de responsabilidades
+- **Documentação JSDoc**: Comentários abrangentes em português em todo o código
+- **Ferramentas de Desenvolvimento**: Scripts automatizados para teste e desenvolvimento
+- **Melhor Tratamento de Erros**: Logging aprimorado e recovery automático
+- **Performance Otimizada**: Melhor gerenciamento de recursos e memória
+- **Base Sólida**: Estrutura preparada para futuras funcionalidades
 
 ## Configuração
 
@@ -177,8 +197,12 @@ O projeto suporta múltiplos idiomas. Idiomas atualmente disponíveis:
 5. Reinstale a extensão para testar:
 
    ```bash
-   gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale --force
-   gnome-extensions install --force *.shell-extension.zip
+   # Use o script de build e instalação
+   ./build.sh
+   gnome-extensions install --force auto-power-profile-v2.0.0.zip
+   
+   # Ou use o script de desenvolvimento rápido
+   ./dev-test.sh
    ```
 
 6. Envie um Pull Request.
@@ -226,17 +250,34 @@ cd auto-power-profile
 # Build (compila traduções e schemas)
 ./build.sh
 
-# Desenvolvimento com instalação automática
-gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale --force
-gnome-extensions install --force *.shell-extension.zip
-gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
+# Para desenvolvimento ativo (veja DEVELOPMENT.md para workflow completo)
+git checkout development
+
+# Ferramentas de teste disponíveis:
+./test-development.sh    # Teste completo com logs e validações
+./dev-test.sh           # Reinstalação rápida para iteração
 
 # Para debug: reiniciar GNOME Shell (Alt+F2, digite 'r', Enter)
 ```
 
+### **Scripts Disponíveis**
+
+- **`./build.sh`**: Compila traduções, schemas e gera pacote v2.0.0
+- **`./test-development.sh`**: Teste abrangente com logs, validações e reinstalação
+- **`./dev-test.sh`**: Reinstalação rápida para desenvolvimento iterativo
+- **Documentação completa**: Consulte `DEVELOPMENT.md` e `TESTING.md`
+
 ## 📋 Releases
 
-### Versão 1.0.0 (Atual)
+### Versão 2.0.0 (Atual)
+- 🔧 **Refatoração Major**: Código completamente refatorado com documentação JSDoc
+- 📝 **Documentação**: Comentários em português e arquitetura modular 
+- 🛠️ **Ferramentas de Desenvolvimento**: Scripts de teste e desenvolvimento automatizados
+- 🌍 **Traduções**: 6 idiomas compilados (pt_BR, es, fr, sv, tr, uk)
+- ⚡ **Performance**: Melhor tratamento de erros e separação de responsabilidades
+- 🎯 **Manutenibilidade**: Base sólida para futuras funcionalidades
+
+### Versão 1.0.0  
 - ✨ **Nova funcionalidade**: Controle automático de animações na bateria
 - 🐛 **Corrigido**: Bug de restauração de animações ao desativar funcionalidade  
 - 🔧 **Melhorado**: Resposta imediata a mudanças nas configurações
