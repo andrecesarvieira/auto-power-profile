@@ -58,6 +58,7 @@ export const General = GObject.registerClass(
       "platform_profile_model",
       "row_lap_mode",
       "lap_mode",
+      "disable_animations_on_battery",
     ],
   },
   class General extends Adw.PreferencesPage {
@@ -92,6 +93,14 @@ export const General = GObject.registerClass(
           settings.bind(
             "lapmode",
             this._lap_mode,
+            "active",
+            Gio.SettingsBindFlags.DEFAULT
+          );
+
+          // Liga controle de animações na bateria às configurações
+          settings.bind(
+            "disable-animations-on-battery",
+            this._disable_animations_on_battery,
             "active",
             Gio.SettingsBindFlags.DEFAULT
           );

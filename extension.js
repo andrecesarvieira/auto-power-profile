@@ -30,6 +30,9 @@ export default class AutoPowerProfile extends Extension {
   _winCreatedWatcher;
   _notifier;
   _tracker;
+  _interfaceSettings;
+  _originalAnimationsEnabled;
+  _animationsCurrentlyDisabled = false;
 
   // Construtor: inicializa o mapa de janelas monitoradas
   constructor(metadata) {
@@ -107,6 +110,9 @@ export default class AutoPowerProfile extends Extension {
 
     // Inicializa o sistema de notificações
     this._notifier = new Notifier(this);
+
+    // Inicializa controle de animações da interface
+    this._interfaceSettings = this.getSettings("org.gnome.desktop.interface");
   }
 
   // Método chamado ao desativar a extensão
@@ -133,6 +139,14 @@ export default class AutoPowerProfile extends Extension {
     // Retorna para perfil balanceado ao desativar
     this._switchProfile("balanced");
 
+    // Restaura animações ao desativar extensão
+    if (
+      this._animationsCurrentlyDisabled &&
+      this._originalAnimationsEnabled !== undefined
+    ) {
+      this._enableAnimations();
+    }
+
     // Remove timers de debounce
     if (this._perfDebounceTimerId) {
       GLib.Source.remove(this._perfDebounceTimerId);
@@ -147,6 +161,9 @@ export default class AutoPowerProfile extends Extension {
     this._powerManagerProxy = null;
     this._powerProfilesProxy = null;
     this._tracker = null;
+    this._interfaceSettings = null;
+    this._originalAnimationsEnabled = undefined;
+    this._animationsCurrentlyDisabled = false;
 
     // Desconecta todas as janelas monitoradas
     for (const [win, cid] of this._trackedWindows.entries()) {
@@ -241,7 +258,18 @@ export default class AutoPowerProfile extends Extension {
       performanceApps: this._settings.get_strv("performance-apps"),
       perfAppsAcMode: this._settings.get_string("performance-apps-ac"),
       perfAppsBatMode: this._settings.get_string("performance-apps-bat"),
+      disableAnimationsOnBattery: this._settings.get_boolean(
+        "disable-animations-on-battery"
+      ),
     };
+
+    // Se usuário desativou a opção de animações, restaura imediatamente
+    if (
+      !this._settingsCache.disableAnimationsOnBattery &&
+      this._animationsCurrentlyDisabled
+    ) {
+      this._enableAnimations();
+    }
 
     // Atualiza transição e verifica apps/perfil
     this._transition.report({});
@@ -334,6 +362,54 @@ export default class AutoPowerProfile extends Extension {
 
     if (allowed) {
       this._switchProfile(powerConditions.configuredProfile);
+    }
+
+    // Gerencia animações baseado no estado de energia
+    this._manageAnimationsBasedOnPower();
+  };
+
+  // Gerencia animações baseado no estado de energia
+  _manageAnimationsBasedOnPower = () => {
+    const powerConditions = this._getPowerConditions();
+
+    // Se opção está ativada nas configurações
+    if (this._settingsCache.disableAnimationsOnBattery) {
+      if (powerConditions.onBattery) {
+        // 🔋 Na bateria: DESABILITA animações
+        this._disableAnimations();
+      } else if (powerConditions.onAC) {
+        // ⚡ Na energia: REABILITA animações
+        this._enableAnimations();
+      }
+    }
+  };
+
+  // Desabilita animações do GNOME
+  _disableAnimations = () => {
+    if (!this._animationsCurrentlyDisabled && this._interfaceSettings) {
+      // Salva estado original APENAS na primeira vez
+      if (this._originalAnimationsEnabled === undefined) {
+        this._originalAnimationsEnabled =
+          this._interfaceSettings.get_boolean("enable-animations");
+      }
+      this._interfaceSettings.set_boolean("enable-animations", false);
+      this._animationsCurrentlyDisabled = true;
+      console.log("🔋 Animações desabilitadas (modo bateria)");
+    }
+  };
+
+  // Reabilita animações do GNOME
+  _enableAnimations = () => {
+    if (this._animationsCurrentlyDisabled && this._interfaceSettings) {
+      // Restaura o valor ORIGINAL (não força true)
+      if (this._originalAnimationsEnabled !== undefined) {
+        this._interfaceSettings.set_boolean(
+          "enable-animations",
+          this._originalAnimationsEnabled
+        );
+      }
+      this._animationsCurrentlyDisabled = false;
+      console.log("⚡ Animações restauradas (modo AC)");
     }
   };
 
