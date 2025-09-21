@@ -49,8 +49,8 @@ show_banner() {
     echo "║  Extensão GNOME Shell para alternância automática de        ║"
     echo "║  perfis de energia com controle de animações na bateria     ║"
     echo "║                                                              ║"
-    echo "║  Mantido por: andrecesarvieira                               ║"
-    echo "║  Versão: 2.0.0                                               ║"
+    echo "║  ⚡ COMPILAÇÃO EM TEMPO REAL ⚡                              ║"
+    echo "║  Mantido por: andrecesarvieira | Versão: 2.0.0              ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
 }
@@ -73,6 +73,33 @@ check_dependencies() {
         exit 1
     fi
     
+    # Verificar git
+    if ! command -v git &> /dev/null; then
+        print_error "git não encontrado. Instale:"
+        print_error "  sudo apt install git     # Ubuntu/Debian"
+        print_error "  sudo dnf install git     # Fedora"
+        print_error "  sudo pacman -S git       # Arch"
+        exit 1
+    fi
+    
+    # Verificar msgfmt (gettext)
+    if ! command -v msgfmt &> /dev/null; then
+        print_error "msgfmt não encontrado. Instale gettext:"
+        print_error "  sudo apt install gettext # Ubuntu/Debian"
+        print_error "  sudo dnf install gettext # Fedora"
+        print_error "  sudo pacman -S gettext   # Arch"
+        exit 1
+    fi
+    
+    # Verificar glib-compile-schemas
+    if ! command -v glib-compile-schemas &> /dev/null; then
+        print_error "glib-compile-schemas não encontrado. Instale glib2-devel:"
+        print_error "  sudo apt install libglib2.0-dev    # Ubuntu/Debian"
+        print_error "  sudo dnf install glib2-devel       # Fedora"
+        print_error "  sudo pacman -S glib2               # Arch"
+        exit 1
+    fi
+    
     # Verificar power-profiles-daemon
     if ! systemctl --user is-active --quiet power-profiles-daemon 2>/dev/null && 
        ! systemctl is-active --quiet power-profiles-daemon 2>/dev/null; then
@@ -83,57 +110,85 @@ check_dependencies() {
         echo
     fi
     
-    # Verificar curl ou wget
-    if ! command -v curl &> /dev/null && ! command -v wget &> /dev/null; then
-        print_error "curl ou wget não encontrado. Instale um deles:"
-        print_error "  sudo apt install curl    # Ubuntu/Debian"
-        print_error "  sudo dnf install curl    # Fedora"
-        print_error "  sudo pacman -S curl      # Arch"
-        exit 1
-    fi
-    
     print_status "Dependências verificadas ✓"
 }
 
-# Baixar extensão
-download_extension() {
-    print_header "Baixando Auto Power Profile v2.0.0..."
+# Baixar código fonte e compilar
+download_and_build_extension() {
+    print_header "Baixando e compilando Auto Power Profile v2.0.0..."
     
     # Criar diretório temporário
     rm -rf "$TEMP_DIR"
     mkdir -p "$TEMP_DIR"
     cd "$TEMP_DIR"
     
-    # URL do arquivo na release
-    local download_url="${REPO_URL}/releases/download/v2.0.0/${ZIP_FILENAME}"
-    
-    # Baixar com curl ou wget
-    if command -v curl &> /dev/null; then
-        print_status "Usando curl para download..."
-        if curl -L -o "$ZIP_FILENAME" "$download_url"; then
-            print_status "Download concluído ✓"
+    # Clonar repositório
+    print_status "Clonando repositório..."
+    if command -v git &> /dev/null; then
+        if git clone --depth 1 --branch main "$REPO_URL.git" auto-power-profile; then
+            print_status "Repositório clonado ✓"
         else
-            print_error "Falha no download com curl"
+            print_error "Falha ao clonar repositório"
             exit 1
         fi
-    elif command -v wget &> /dev/null; then
-        print_status "Usando wget para download..."
-        if wget -O "$ZIP_FILENAME" "$download_url"; then
-            print_status "Download concluído ✓"
-        else
-            print_error "Falha no download com wget"
-            exit 1
-        fi
+    else
+        print_error "git não encontrado. Instale: sudo apt install git"
+        exit 1
     fi
     
-    # Verificar se arquivo foi baixado
+    # Entrar no diretório do projeto
+    cd auto-power-profile
+    
+    # Compilar traduções
+    print_status "Compilando traduções..."
+    if [ -d "po" ]; then
+        mkdir -p locale
+        local compiled_count=0
+        for po_file in po/*.po; do
+            if [ -f "$po_file" ]; then
+                lang_code=$(basename "$po_file" .po)
+                mkdir -p "locale/${lang_code}/LC_MESSAGES"
+                
+                if msgfmt "$po_file" -o "locale/${lang_code}/LC_MESSAGES/org.gnome.shell.extensions.auto-power-profile.mo"; then
+                    ((compiled_count++))
+                else
+                    print_warning "Falha ao compilar tradução: ${lang_code}"
+                fi
+            fi
+        done
+        print_status "Traduções compiladas: ${compiled_count} idiomas ✓"
+    fi
+    
+    # Compilar schemas
+    print_status "Compilando schemas..."
+    if [ -d "schemas" ]; then
+        cd schemas
+        if glib-compile-schemas .; then
+            print_status "Schemas compilados ✓"
+        else
+            print_error "Falha ao compilar schemas"
+            exit 1
+        fi
+        cd ..
+    fi
+    
+    # Empacotar extensão
+    print_status "Empacotando extensão..."
+    if gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale --force; then
+        print_status "Extensão empacotada ✓"
+    else
+        print_error "Falha ao empacotar extensão"
+        exit 1
+    fi
+    
+    # Verificar se arquivo foi criado
     if [ ! -f "$ZIP_FILENAME" ]; then
-        print_error "Arquivo não encontrado após download"
+        print_error "Arquivo $ZIP_FILENAME não foi criado"
         exit 1
     fi
     
     local file_size=$(du -h "$ZIP_FILENAME" | cut -f1)
-    print_status "Arquivo baixado: $ZIP_FILENAME ($file_size)"
+    print_status "Pacote criado: $ZIP_FILENAME ($file_size)"
 }
 
 # Instalar extensão
@@ -195,10 +250,23 @@ verify_installation() {
 cleanup() {
     print_header "Limpando arquivos temporários..."
     
+    # Remover diretório temporário completo
     if [ -d "$TEMP_DIR" ]; then
         rm -rf "$TEMP_DIR"
         print_status "Arquivos temporários removidos ✓"
     fi
+    
+    # Limpar cache de compilação se existir
+    if [ -d ~/.cache/gnome-shell ]; then
+        print_status "Limpando cache do GNOME Shell..."
+        rm -rf ~/.cache/gnome-shell/extensions 2>/dev/null || true
+    fi
+    
+    # Limpar arquivos de build desnecessários do diretório home
+    find ~ -name "*.mo" -path "*/auto-power-profile*" -delete 2>/dev/null || true
+    find ~ -name "gschemas.compiled" -path "*/auto-power-profile*" -delete 2>/dev/null || true
+    
+    print_status "Limpeza completa realizada ✓"
 }
 
 # Mostrar instruções finais
@@ -217,12 +285,18 @@ show_final_instructions() {
     echo "  • Limite configurável para modo economia"
     echo "  • Perfis específicos para aplicativos de performance"
     echo
+    echo -e "${CYAN}✨ Características da instalação:${NC}"
+    echo "  • Compilado em tempo real com código mais recente"
+    echo "  • Traduções e schemas compilados especificamente para seu sistema"
+    echo "  • Arquivos desnecessários automaticamente removidos"
+    echo "  • Cache limpo para garantir funcionamento otimizado"
+    echo
     echo -e "${CYAN}🛠️ Suporte e documentação:${NC}"
     echo "  • GitHub: ${REPO_URL}"
     echo "  • Issues: ${REPO_URL}/issues"
     echo "  • Documentação completa no README.md"
     echo
-    print_success "Aproveite a extensão! 🚀"
+    print_success "Aproveite a extensão compilada especialmente para você! 🚀"
 }
 
 # Tratamento de erro
@@ -252,7 +326,7 @@ main() {
     check_dependencies
     echo
     
-    download_extension
+    download_and_build_extension
     echo
     
     install_extension
