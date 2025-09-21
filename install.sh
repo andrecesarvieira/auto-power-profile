@@ -59,44 +59,63 @@ show_banner() {
 check_dependencies() {
     print_header "Verificando dependências do sistema..."
     
+    local missing_deps=()
+    
     # Verificar GNOME Shell
     if ! command -v gnome-shell &> /dev/null; then
         print_error "GNOME Shell não encontrado. Esta extensão é apenas para GNOME."
+        print_error "Certifique-se de estar executando em uma sessão GNOME Shell."
+        exit 1
+    fi
+    
+    # Verificar versão do GNOME Shell
+    local gnome_version=$(gnome-shell --version 2>/dev/null | grep -oE '[0-9]+' | head -1)
+    if [ -n "$gnome_version" ] && [ "$gnome_version" -lt 45 ]; then
+        print_error "GNOME Shell $gnome_version não é suportado."
+        print_error "Versões suportadas: 45, 46, 47, 48, 49"
         exit 1
     fi
     
     # Verificar gnome-extensions
     if ! command -v gnome-extensions &> /dev/null; then
+        missing_deps+=("gnome-extensions")
         print_error "Comando gnome-extensions não encontrado."
         print_error "Instale: sudo apt install gnome-shell-extension-manager (Ubuntu/Debian)"
         print_error "        sudo dnf install gnome-extensions-app (Fedora)"
-        exit 1
+        print_error "        sudo pacman -S gnome-shell-extensions (Arch)"
     fi
     
     # Verificar git
     if ! command -v git &> /dev/null; then
+        missing_deps+=("git")
         print_error "git não encontrado. Instale:"
         print_error "  sudo apt install git     # Ubuntu/Debian"
         print_error "  sudo dnf install git     # Fedora"
         print_error "  sudo pacman -S git       # Arch"
-        exit 1
     fi
     
     # Verificar msgfmt (gettext)
     if ! command -v msgfmt &> /dev/null; then
+        missing_deps+=("gettext")
         print_error "msgfmt não encontrado. Instale gettext:"
         print_error "  sudo apt install gettext # Ubuntu/Debian"
         print_error "  sudo dnf install gettext # Fedora"
         print_error "  sudo pacman -S gettext   # Arch"
-        exit 1
     fi
     
     # Verificar glib-compile-schemas
     if ! command -v glib-compile-schemas &> /dev/null; then
-        print_error "glib-compile-schemas não encontrado. Instale glib2-devel:"
+        missing_deps+=("glib2-devel")
+        print_error "glib-compile-schemas não encontrado. Instale:"
         print_error "  sudo apt install libglib2.0-dev    # Ubuntu/Debian"
         print_error "  sudo dnf install glib2-devel       # Fedora"
         print_error "  sudo pacman -S glib2               # Arch"
+    fi
+    
+    # Se houver dependências faltando, sair
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        print_error "Dependências faltando: ${missing_deps[*]}"
+        print_error "Instale as dependências acima e execute novamente."
         exit 1
     fi
     
@@ -104,10 +123,19 @@ check_dependencies() {
     if ! systemctl --user is-active --quiet power-profiles-daemon 2>/dev/null && 
        ! systemctl is-active --quiet power-profiles-daemon 2>/dev/null; then
         print_warning "power-profiles-daemon não está ativo"
-        print_warning "Instale: sudo apt install power-profiles-daemon (Ubuntu/Debian)"
-        print_warning "        sudo dnf install power-profiles-daemon (Fedora)"
-        print_warning "        sudo pacman -S power-profiles-daemon (Arch)"
+        print_warning "A extensão funcionará parcialmente sem ele."
+        print_warning "Para funcionalidade completa, instale:"
+        print_warning "  sudo apt install power-profiles-daemon # Ubuntu/Debian"
+        print_warning "  sudo dnf install power-profiles-daemon # Fedora"
+        print_warning "  sudo pacman -S power-profiles-daemon   # Arch"
         echo
+        
+        # Perguntar se deseja continuar
+        read -p "Continuar mesmo assim? [y/N]: " continue_install
+        if [[ ! "$continue_install" =~ ^[yYsS]$ ]]; then
+            print_status "Instalação cancelada pelo usuário."
+            exit 0
+        fi
     fi
     
     print_status "Dependências verificadas ✓"
@@ -302,9 +330,35 @@ show_final_instructions() {
 # Tratamento de erro
 error_handler() {
     local line_number=$1
-    print_error "Erro na linha $line_number"
+    local exit_code=$?
+    
+    echo
+    print_error "❌ Falha na instalação (linha $line_number, código $exit_code)"
+    echo
+    
+    # Diagnóstico do ambiente
+    echo -e "${CYAN}🔍 Informações de diagnóstico:${NC}"
+    echo "  Sistema: $(uname -s) $(uname -m)"
+    echo "  Desktop: ${XDG_CURRENT_DESKTOP:-'não detectado'}"
+    echo "  Display: ${DISPLAY:-'não definido'} ${WAYLAND_DISPLAY:+'(Wayland)'}"
+    
+    if command -v gnome-shell &> /dev/null; then
+        echo "  GNOME Shell: $(gnome-shell --version 2>/dev/null || echo 'versão não detectada')"
+    else
+        echo "  GNOME Shell: não instalado ❌"
+    fi
+    
+    echo "  Bash: ${BASH_VERSION}"
+    echo "  Usuário: $(whoami)"
+    echo "  Diretório: $(pwd)"
+    
+    echo
+    print_status "📞 Para suporte:"
+    print_status "  • Reporte este erro: https://github.com/andrecesarvieira/auto-power-profile/issues"
+    print_status "  • Inclua as informações de diagnóstico acima"
+    
     cleanup
-    exit 1
+    exit $exit_code
 }
 
 # Tratamento de interrupção
@@ -322,6 +376,31 @@ trap interrupt_handler SIGINT
 # Função principal
 main() {
     show_banner
+    
+    # Verificar ambiente de execução
+    echo -e "${CYAN}🔍 Verificando ambiente de execução...${NC}"
+    
+    # Verificar se está em uma sessão GNOME
+    if [ "${XDG_CURRENT_DESKTOP:-}" != "GNOME" ]; then
+        print_warning "Desktop atual: ${XDG_CURRENT_DESKTOP:-'não detectado'}"
+        print_warning "Esta extensão é projetada para GNOME Shell"
+        
+        if [ -z "${XDG_CURRENT_DESKTOP:-}" ]; then
+            print_error "Variável XDG_CURRENT_DESKTOP não definida"
+            print_error "Certifique-se de estar em uma sessão GNOME"
+            exit 1
+        fi
+    fi
+    
+    # Verificar display
+    if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
+        print_error "Nenhum display gráfico detectado"
+        print_error "Execute este comando em uma sessão gráfica GNOME"
+        exit 1
+    fi
+    
+    print_status "Ambiente verificado ✓"
+    echo
     
     check_dependencies
     echo
@@ -342,5 +421,52 @@ main() {
 
 # Executar se chamado diretamente
 if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
-    main "$@"
+    case "${1:-}" in
+        --help|-h)
+            cat << 'EOF'
+Auto Power Profile - Instalador v2.0.0
+
+SINOPSE:
+    curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh | bash
+    
+    ou
+    
+    ./install.sh [OPÇÕES]
+
+OPÇÕES:
+    -h, --help      Mostra esta ajuda
+    -v, --version   Mostra a versão
+    --debug         Executa com informações de debug
+
+REQUISITOS:
+    - GNOME Shell 45+ em execução
+    - git, gettext, glib2-devel
+    - gnome-extensions
+    - power-profiles-daemon (recomendado)
+
+EXEMPLOS:
+    # Instalação padrão via curl
+    curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh | bash
+    
+    # Instalação local com debug
+    ./install.sh --debug
+
+SUPORTE:
+    https://github.com/andrecesarvieira/auto-power-profile/issues
+
+EOF
+            exit 0
+            ;;
+        --version|-v)
+            echo "Auto Power Profile Installer v2.0.0"
+            exit 0
+            ;;
+        --debug)
+            set -x  # Ativar debug
+            main "$@"
+            ;;
+        *)
+            main "$@"
+            ;;
+    esac
 fi
