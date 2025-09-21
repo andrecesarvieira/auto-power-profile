@@ -10,7 +10,7 @@ Este projeto é um fork mantido por [andrecesarvieira](https://github.com/andrec
 
 ## Compatibilidade
 
-- GNOME Shell: 45, 46, 47, 48
+- GNOME Shell: 45, 46, 47, 48, 49
 - Linux: Requer suporte ao `powerprofilesctl` ou `tuned-ppd` (Fedora >= 40)
 
 ## Instalação
@@ -215,14 +215,19 @@ cd auto-power-profile
 
 ## 📋 Releases
 
-### Versão 23 (Atual)
+### Versão 24 (Atual)
 - ✨ **Nova**: Controle automático de animações na bateria
-- 🐛 **Corrigido**: Detecção de estados de energia melhorada
-- 🌍 **Melhorado**: Traduções completas para pt_BR
-- 🧹 **Limpeza**: Código otimizado e documentação melhorada
+- 🐛 **Corrigido**: Bug de restauração de animações ao desativar funcionalidade  
+- 🔧 **Melhorado**: Resposta imediata a mudanças nas configurações
+- 🌍 **Atualizado**: Compatibilidade com GNOME 49
+- 🧹 **Limpeza**: Código otimizado e repositório organizado
+
+### Versão 23
+- 📋 Implementação inicial do controle de animações
+- 🌍 Traduções completas para pt_BR
 
 ### Versão 22
-- 📋 Fork inicial com funcionalidades básicas
+- 📋 Fork inicial com funcionalidades básicas de perfis de energia
 ```
 
 ## Licença
