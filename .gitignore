@@ -1,6 +1,10 @@
 # Arquivos compilados e temporários
 *.zip
 *.mo
+gschemas.compiled
+
+# Diretório de traduções compiladas
+locale/
 
 # Dependências de desenvolvimento
 node_modules/
@@ -8,6 +12,8 @@ node_modules/
 # Arquivos de teste e desenvolvimento
 test-*.sh
 status-check.sh
+check-translations.sh
+install-dev.sh
 
 # Arquivos de documentação temporária
 IMPLEMENTATION-*.md

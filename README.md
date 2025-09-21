@@ -27,15 +27,22 @@ Disponível na [GNOME Extensions](https://extensions.gnome.org/extension/6583/au
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Compile schemas
-glib-compile-schemas schemas/
+# Build da extensão (compila schemas e traduções)
+./build.sh
 
 # Empacote a extensão
-gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib
+gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale
 
 # Instale e ative
 gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
 gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
+```
+
+**Desenvolvimento rápido:**
+
+```bash
+# Para desenvolvimento com reinstalação automática
+./install-dev.sh
 ```
 
 A extensão aparecerá na lista e será ativada após reiniciar a sessão.
