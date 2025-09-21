@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Auto Power Profile\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-19 10:16+0200\n"
+"POT-Creation-Date: 2025-09-21 10:27-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,92 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:69
+#: extension.js:80
 msgid "Error connecting UPower DBus"
 msgstr ""
 
-#: extension.js:86
+#: extension.js:99
 msgid "Error connecting power-profiles-daemon DBus"
 msgstr ""
 
-#: extension.js:317
+#: extension.js:434
 msgid "Package power-profiles-daemon is not installed"
 msgstr ""
 
-#: extension.js:322
+#: extension.js:439
 msgid ""
 "No system-specific platform driver is available. Consider upgrading power-"
 "profiles-daemon and linux kernel"
 msgstr ""
 
-#: prefs.js:65 ui/general.ui:5
+#: prefs.js:70
 msgid "General"
 msgstr ""
 
-#: prefs.js:112
+#: prefs.js:130
 msgid "Performance Apps"
 msgstr ""
 
-#: prefs.js:117
+#: prefs.js:136
 msgid "Application-Based Profiles"
 msgstr ""
 
-#: prefs.js:119
+#: prefs.js:138
 msgid ""
 "Activate profiles for running selected apps. Can be used to prioritize "
 "performance ad-hoc"
 msgstr ""
 
-#: prefs.js:141 ui/general.ui:36
+#: prefs.js:162
 msgid "On Battery"
 msgstr ""
 
-#: prefs.js:149 ui/general.ui:14
+#: prefs.js:171
 msgid "On AC"
 msgstr ""
 
-#: prefs.js:238
+#: prefs.js:269
 msgid "Performance"
 msgstr ""
 
-#: prefs.js:239
+#: prefs.js:270
 msgid "Balanced"
 msgstr ""
 
-#: prefs.js:240
+#: prefs.js:271
 msgid "Power Saver"
-msgstr ""
-
-#: ui/general.ui:9
-msgid "Default Profiles"
-msgstr ""
-
-#: ui/general.ui:10
-msgid "Applied automatically unless user sets manually another one"
-msgstr ""
-
-#: ui/general.ui:15
-msgid "Select the default profile when connected to AC"
-msgstr ""
-
-#: ui/general.ui:22
-msgid "Handle lap-mode on AC"
-msgstr ""
-
-#: ui/general.ui:23
-msgid ""
-"Try to maintain performance mode on unstable surfaces. Disable if you are "
-"experiencing thermal issues"
-msgstr ""
-
-#: ui/general.ui:37
-msgid "Select the default profile when running on battery"
-msgstr ""
-
-#: ui/general.ui:48
-msgid "Power Saving Threshold"
-msgstr ""
-
-#: ui/general.ui:49
-msgid "Switch to power saving profile when the battery level drops below"
 msgstr ""

@@ -1,2 +1,25 @@
+# Arquivos compilados e temporários
 *.zip
-node_modules
+*.mo
+
+# Dependências de desenvolvimento
+node_modules/
+
+# Arquivos de teste e desenvolvimento
+test-*.sh
+status-check.sh
+
+# Arquivos de documentação temporária
+IMPLEMENTATION-*.md
+TRANSLATIONS-*.md
+
+# Configurações do VS Code (opcional, pode remover se quiser versionar)
+.vscode/
+
+# Arquivos de backup do editor
+*~
+*.bak
+*.orig
+
+# Logs
+*.log

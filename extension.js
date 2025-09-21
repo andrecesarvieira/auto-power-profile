@@ -1,4 +1,5 @@
 // Importação das dependências GNOME e módulos internos
+import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 import UPower from "gi://UPowerGlib";
 import Shell from "gi://Shell";
@@ -112,7 +113,9 @@ export default class AutoPowerProfile extends Extension {
     this._notifier = new Notifier(this);
 
     // Inicializa controle de animações da interface
-    this._interfaceSettings = this.getSettings("org.gnome.desktop.interface");
+    this._interfaceSettings = new Gio.Settings({
+      schema: "org.gnome.desktop.interface",
+    });
   }
 
   // Método chamado ao desativar a extensão

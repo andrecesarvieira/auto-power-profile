@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: auto-power-profile\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-19 10:16+0200\n"
-"PO-Revision-Date: 2025-08-19 11:45+0200\n"
+"POT-Creation-Date: 2025-09-21 10:27-0300\n"
+"PO-Revision-Date: 2025-09-21 10:30-0300\n"
 "Last-Translator: André Vieira <andrecesarvieira@hotmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -110,6 +110,26 @@ msgstr "Limite para economia de energia"
 #: ui/general.ui:49
 msgid "Switch to power saving profile when the battery level drops below"
 msgstr "Trocar para o perfil de economia de energia quando o nível da bateria ficar abaixo de:"
+
+#: ui/general.ui:61
+msgid "Battery Optimizations"
+msgstr "Otimizações de Bateria"
+
+#: ui/general.ui:62
+msgid "Additional power saving features when running on battery"
+msgstr "Recursos adicionais de economia de energia ao usar a bateria"
+
+#: ui/general.ui:65
+msgid "Disable animations on battery"
+msgstr "Desabilitar animações na bateria"
+
+#: ui/general.ui:66
+msgid ""
+"Automatically disable GNOME animations when running on battery power to "
+"save energy. Animations are restored when connecting to AC power."
+msgstr ""
+"Desabilita automaticamente as animações do GNOME ao usar a bateria para "
+"economizar energia. As animações são restauradas ao conectar à energia."
 
 #~ msgid "Advanced"
 #~ msgstr "Avançado"
