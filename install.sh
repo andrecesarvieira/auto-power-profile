@@ -91,24 +91,40 @@ mkdir -p "$EXTENSION_DIR"
 cp -r extension.js prefs.js metadata.json "$EXTENSION_DIR/"
 cp -r lib/ ui/ schemas/ locale/ po/ "$EXTENSION_DIR/"
 
-# Habilitar extensão
-echo -e "${YELLOW}▶️ Habilitando extensão...${NC}"
-sleep 2
-gnome-extensions enable $EXTENSION_ID
+# Verificar se a extensão foi instalada corretamente
+if [ ! -f "$EXTENSION_DIR/metadata.json" ]; then
+    echo -e "${RED}❌ Erro na instalação da extensão${NC}"
+    rm -rf "$TEMP_DIR"
+    exit 1
+fi
 
 # Limpeza
 rm -rf "$TEMP_DIR"
 
+# Verificar se estamos em uma sessão Wayland/X11
+if [ "$XDG_SESSION_TYPE" = "wayland" ] || [ -n "$WAYLAND_DISPLAY" ]; then
+    SESSION_TYPE="Wayland"
+else
+    SESSION_TYPE="X11"
+fi
+
 echo ""
 echo -e "${GREEN}🎉 Instalação concluída com sucesso!${NC}"
 echo ""
-echo -e "${BLUE}📋 Próximos passos:${NC}"
-echo -e "   • Abra as configurações: ${YELLOW}gnome-extensions prefs $EXTENSION_ID${NC}"
-echo -e "   • Configure os perfis de energia desejados"
-echo -e "   • Ative 'Desabilitar animações na bateria' para economia adicional"
+echo -e "${YELLOW}🔄 IMPORTANTE: Reinicie o GNOME Shell para ativar a extensão${NC}"
+if [ "$SESSION_TYPE" = "X11" ]; then
+    echo -e "${BLUE}   X11: Pressione ${YELLOW}Alt+F2${BLUE}, digite ${YELLOW}'r'${BLUE} e pressione Enter${NC}"
+else
+    echo -e "${BLUE}   Wayland: Faça logout e login novamente${NC}"
+fi
+echo ""
+echo -e "${BLUE}📋 Após reiniciar o GNOME Shell:${NC}"
+echo -e "   1. Habilite a extensão: ${YELLOW}gnome-extensions enable $EXTENSION_ID${NC}"
+echo -e "   2. Configure: ${YELLOW}gnome-extensions prefs $EXTENSION_ID${NC}"
+echo -e "   3. Ative 'Desabilitar animações na bateria' para economia extra"
 echo ""
 echo -e "${BLUE}ℹ️ Informações:${NC}"
 echo -e "   • Repositório: https://github.com/andrecesarvieira/auto-power-profile"
 echo -e "   • Versão instalada: $(grep -o '"version": [0-9]*' "$EXTENSION_DIR/metadata.json" | grep -o '[0-9]*')"
 echo ""
-echo -e "${GREEN}✨ Aproveite a economia automática de energia!${NC}"
+echo -e "${GREEN}✨ Após reiniciar, a extensão gerenciará automaticamente a energia!${NC}"
