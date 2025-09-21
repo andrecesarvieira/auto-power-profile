@@ -3,7 +3,7 @@
 # Script de instalação para Auto Power Profile GNOME Shell Extension
 # Instalação fácil via curl para usuários finais
 
-set -e
+# Removido set -e temporariamente para debug
 
 # Cores para output
 RED='\033[0;31m'
