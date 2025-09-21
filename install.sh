@@ -177,8 +177,9 @@ download_and_build_extension() {
                 lang_code=$(basename "$po_file" .po)
                 mkdir -p "locale/${lang_code}/LC_MESSAGES"
                 
-                if msgfmt "$po_file" -o "locale/${lang_code}/LC_MESSAGES/org.gnome.shell.extensions.auto-power-profile.mo"; then
+                if msgfmt "$po_file" -o "locale/${lang_code}/LC_MESSAGES/auto-power-profile.mo"; then
                     ((compiled_count++))
+                    print_status "  $lang_code compilado ✓"
                 else
                     print_warning "Falha ao compilar tradução: ${lang_code}"
                 fi
@@ -202,11 +203,21 @@ download_and_build_extension() {
     
     # Empacotar extensão
     print_status "Empacotando extensão..."
+    print_status "Verificando arquivos antes do empacotamento:"
+    ls -la *.js metadata.json 2>/dev/null || print_warning "Arquivos principais não encontrados"
+    ls -la ui/ lib/ schemas/ locale/ 2>/dev/null || print_warning "Alguns diretórios podem estar ausentes"
+    
     if gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale --force; then
         print_status "Extensão empacotada ✓"
     else
         print_error "Falha ao empacotar extensão"
-        exit 1
+        print_status "Tentando empacotamento sem locale:"
+        if gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --force; then
+            print_status "Extensão empacotada sem locale ✓"
+        else
+            print_error "Falha total no empacotamento"
+            exit 1
+        fi
     fi
     
     # Verificar se arquivo foi criado
@@ -229,11 +240,23 @@ install_extension() {
         gnome-extensions uninstall "$EXTENSION_UUID" || true
     fi
     
+    # Verificar se o arquivo ZIP existe
+    if [ ! -f "$ZIP_FILENAME" ]; then
+        print_error "Arquivo ZIP não encontrado: $ZIP_FILENAME"
+        print_status "Arquivos no diretório:"
+        ls -la *.zip 2>/dev/null || echo "Nenhum arquivo ZIP encontrado"
+        exit 1
+    fi
+    
     # Instalar nova versão
+    print_status "Instalando $ZIP_FILENAME..."
     if gnome-extensions install --force "$ZIP_FILENAME"; then
         print_status "Extensão instalada com sucesso ✓"
     else
         print_error "Falha ao instalar extensão"
+        print_status "Tentando diagnóstico..."
+        ls -la "$ZIP_FILENAME"
+        gnome-extensions --version
         exit 1
     fi
     
