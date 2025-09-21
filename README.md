@@ -51,7 +51,7 @@ chmod +x install.sh
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Build da extensão
+# Build da extensão (compila traduções e schemas)
 ./build.sh
 
 # Empacote para distribuição
@@ -164,13 +164,24 @@ O projeto suporta múltiplos idiomas. Idiomas atualmente disponíveis:
 
 3. Edite com [Poedit](https://poedit.net/) ou editor de texto.
 
-4. Compile para testar:
+4. Compile e teste:
 
    ```bash
-   msgfmt po/[codigo_idioma].po -o po/[codigo_idioma].mo
+   # Use o script de build (recomendado)
+   ./build.sh
+   
+   # Ou compile manualmente
+   msgfmt po/[codigo_idioma].po -o locale/[codigo_idioma]/LC_MESSAGES/org.gnome.shell.extensions.auto-power-profile.mo
    ```
 
-5. Envie um Pull Request.
+5. Reinstale a extensão para testar:
+
+   ```bash
+   gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale --force
+   gnome-extensions install --force *.shell-extension.zip
+   ```
+
+6. Envie um Pull Request.
 
 ## Resolução de Problemas
 
@@ -205,14 +216,22 @@ Contribuições são bem-vindas!
 ### **Desenvolvimento**
 
 ```bash
-### **Desenvolvimento:**
+### **Desenvolvimento**
+
 ```bash
 # Clonar para desenvolvimento
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
-# Build e instalação automática
+# Build (compila traduções e schemas)
 ./build.sh
+
+# Desenvolvimento com instalação automática
+gnome-extensions pack --podir=po --extra-source=ui --extra-source=lib --extra-source=locale --force
+gnome-extensions install --force *.shell-extension.zip
+gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
+
+# Para debug: reiniciar GNOME Shell (Alt+F2, digite 'r', Enter)
 ```
 
 ## 📋 Releases
