@@ -178,7 +178,7 @@ download_and_build_extension() {
                 mkdir -p "locale/${lang_code}/LC_MESSAGES"
                 
                 if msgfmt "$po_file" -o "locale/${lang_code}/LC_MESSAGES/auto-power-profile.mo"; then
-                    ((compiled_count++))
+                    compiled_count=$((compiled_count + 1))
                     print_status "  $lang_code compilado ✓"
                 else
                     print_warning "Falha ao compilar tradução: ${lang_code}"
