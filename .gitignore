@@ -1,62 +1,16 @@
-# ========================================
-# GNOME Shell Extension - Auto Power Profile
-# ========================================
+# Auto Power Profile - GNOME Shell Extension
 
-# Build artifacts and distribution files
+# Build artifacts
 *.zip
-*.tar.gz
-*.tar.xz
 *.shell-extension.zip
 
-# Compiled files (generated automatically)
+# Compiled files
 *.mo
 locale/
 gschemas.compiled
-schemas/gschemas.compiled
 
-# Build output directories
-build/
-dist/
-output/
-
-# ========================================
-# Development and Testing
-# ========================================
-
-# Temporary files
-tmp/
-temp/
-*.bak
-*.orig
-*.old
-*~
-
-# ========================================
-# System Files
-# ========================================
-
-# macOS
+# System files
 .DS_Store
-
-# Windows
 Thumbs.db
-
-# Linux
-.directory
-
-# ========================================
-# Editor Files
-# ========================================
-
-# VSCode
-.vscode/
-
-# Vim
-*.swp
-*.swo
-
-# ========================================
-# Logs
-# ========================================
-
-*.log
+*~
+*.bak

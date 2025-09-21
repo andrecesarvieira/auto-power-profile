@@ -55,7 +55,7 @@ gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 
 - **Alternativa**: `tuned-ppd` (Fedora >= 40)
 
-### 🛠️ Desenvolvimento e Build
+### 🛠️ Build Manual
 
 ```bash
 # Clone o repositório
@@ -68,19 +68,6 @@ cd auto-power-profile
 # Instalar versão local
 gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
 gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
-```
-
-**Scripts de Desenvolvimento:**
-
-```bash
-# Teste completo com reinstalação automática
-./test-development.sh
-
-# Reinstalação rápida para desenvolvimento  
-./dev-test.sh
-
-# Build com empacotamento (gera arquivo com UUID)
-./build.sh
 ```
 
 A extensão aparecerá na lista e será ativada após reiniciar a sessão.
@@ -203,9 +190,7 @@ O projeto suporta múltiplos idiomas. Idiomas atualmente disponíveis:
    # Use o script de build e instalação
    ./build.sh
    gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
-   
-   # Ou use o script de desenvolvimento rápido
-   ./dev-test.sh
+   gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
    ```
 
 6. Envie um Pull Request.
@@ -243,22 +228,19 @@ Contribuições são bem-vindas!
 ### **Desenvolvimento**
 
 ```bash
-### **Desenvolvimento**
+### **Build e Contribuição**
 
 ```bash
-# Clonar para desenvolvimento
+# Clonar para contribuir
 git clone https://github.com/andrecesarvieira/auto-power-profile.git
 cd auto-power-profile
 
 # Build (compila traduções, schemas e empacota)
 ./build.sh
 
-# Para desenvolvimento ativo (veja DEVELOPMENT.md para workflow completo)
-git checkout development
-
-# Ferramentas de teste disponíveis:
-./test-development.sh    # Teste completo com logs e validações
-./dev-test.sh           # Reinstalação rápida para iteração
+# Testar localmente
+gnome-extensions install --force auto-power-profile@andrecesarvieira.github.io.shell-extension.zip
+gnome-extensions enable auto-power-profile@andrecesarvieira.github.io
 
 # Para debug: reiniciar GNOME Shell (Alt+F2, digite 'r', Enter)
 ```
@@ -267,9 +249,6 @@ git checkout development
 
 - **`./install.sh`**: Instalação automática para usuários finais
 - **`./build.sh`**: Compila traduções, schemas e gera pacote com UUID
-- **`./test-development.sh`**: Teste abrangente com logs, validações e reinstalação
-- **`./dev-test.sh`**: Reinstalação rápida para desenvolvimento iterativo
-- **Documentação completa**: Consulte `DEVELOPMENT.md` e `TESTING.md`
 
 ## 📋 Releases
 
