@@ -1,6 +1,8 @@
 # Auto Power Profile
 
-Extensão para GNOME Shell que alterna automaticamente entre perfis de energia conforme o status da fonte de alimentação e nível da bateria. **Nova funcionalidade**: controle automático de animações do GNOME para maximizar a economia de energia na bateria.
+Extensão para GNOME Shell que alterna automaticamente entre perfis de energia conforme o status da fonte de alimentação e nível da bateria.
+
+**Nova funcionalidade**: controle automático de animações do GNOME para maximizar a economia de energia na bateria.
 
 > 🔋 **Economia de energia inteligente**: Desabilita animações automaticamente na bateria e restaura quando conectado à energia
 
@@ -16,7 +18,6 @@ Este projeto é um fork mantido por [andrecesarvieira](https://github.com/andrec
 ### 🚀 Instalação Rápida (Recomendada)
 
 ```bash
-# Instalação direta do GitHub (mais atualizada)
 curl -fsSL https://raw.githubusercontent.com/andrecesarvieira/auto-power-profile/main/install.sh | bash
 ```
 
