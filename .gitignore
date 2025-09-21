@@ -182,3 +182,4 @@ _site/
 # Local configuration
 config.local.*
 settings.local.*
+test-animation-control.sh
