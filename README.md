@@ -215,19 +215,13 @@ cd auto-power-profile
 
 ## 📋 Releases
 
-### Versão 24 (Atual)
-- ✨ **Nova**: Controle automático de animações na bateria
+### Versão 1.0.0 (Atual)
+- ✨ **Nova funcionalidade**: Controle automático de animações na bateria
 - 🐛 **Corrigido**: Bug de restauração de animações ao desativar funcionalidade  
 - 🔧 **Melhorado**: Resposta imediata a mudanças nas configurações
-- 🌍 **Atualizado**: Compatibilidade com GNOME 49
-- 🧹 **Limpeza**: Código otimizado e repositório organizado
-
-### Versão 23
-- 📋 Implementação inicial do controle de animações
-- 🌍 Traduções completas para pt_BR
-
-### Versão 22
-- 📋 Fork inicial com funcionalidades básicas de perfis de energia
+- 🌍 **Compatibilidade**: GNOME Shell 45-49
+- 🧹 **Base**: Fork do auto-power-profile v24 (dmy3k) com melhorias
+- 🎯 **Foco**: Economia de energia inteligente na bateria
 ```
 
 ## Licença
