@@ -243,6 +243,7 @@ export default class AutoPowerProfile extends Extension {
     this._transition.report({});
     this._checkPerformanceApps();
     this._checkProfile();
+    this._manageAnimationsBasedOnPower();
   };
 
   _checkPerformanceApps = () => {
@@ -361,12 +362,20 @@ export default class AutoPowerProfile extends Extension {
    * Manages GNOME animations based on power state for battery optimization
    */
   _manageAnimationsBasedOnPower() {
-    if (!this._settingsCache.disableAnimationsOnBattery) {
-      return; // Feature disabled
-    }
-
     const powerConditions = this._getPowerConditions();
     const isOnBattery = !powerConditions.acPowered;
+
+    if (!this._settingsCache.disableAnimationsOnBattery) {
+      // Feature disabled - restore animations if they were previously disabled
+      if (this._animationsEnabled !== null) {
+        this._desktopSettings.set_boolean(
+          "enable-animations",
+          this._animationsEnabled
+        );
+        this._animationsEnabled = null; // Reset stored value
+      }
+      return;
+    }
 
     if (isOnBattery) {
       // Store original setting if not already stored
