@@ -257,8 +257,9 @@ export default class AutoPowerProfilePreferences extends ExtensionPreferences {
   // Preenche a janela de preferências com as páginas
   fillPreferencesWindow(window) {
     // Configurar tamanho da janela para melhor usabilidade
-    window.set_default_size(680, 600);
-    window.set_size_request(600, 500);
+    // Formato: largura x altura
+    window.set_default_size(600, 720);
+    window.set_size_request(550, 650);
     
     const settings = this.getSettings();
     const availableProfiles = this._loadAvailableProfiles();
